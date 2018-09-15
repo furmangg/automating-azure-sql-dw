@@ -1,0 +1,134 @@
+{
+    "name": "ResumeAzureSQLDW",
+    "properties": {
+        "activities": [
+            {
+                "name": "IfSqlDwPaused",
+                "type": "IfCondition",
+                "dependsOn": [
+                    {
+                        "activity": "CheckIfSqlDwPaused",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@not(equals('Online',string(activity('CheckIfSqlDwPaused').output.properties.status)))",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [
+                        {
+                            "name": "ResumeSqlDw",
+                            "type": "WebActivity",
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false
+                            },
+                            "typeProperties": {
+                                "url": {
+                                    "value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'/resume?api-version=2014-04-01-preview')",
+                                    "type": "Expression"
+                                },
+                                "method": "POST",
+                                "body": {
+                                    "value": "@string('')",
+                                    "type": "Expression"
+                                },
+                                "authentication": {
+                                    "type": "MSI",
+                                    "resource": "https://management.core.windows.net/"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "CheckIfSqlDwPaused",
+                "type": "WebActivity",
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false
+                },
+                "typeProperties": {
+                    "url": {
+                        "value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'?api-version=2014-04-01')",
+                        "type": "Expression"
+                    },
+                    "method": "GET",
+                    "authentication": {
+                        "type": "MSI",
+                        "resource": "https://management.core.windows.net/"
+                    }
+                }
+            },
+            {
+                "name": "UntilSqlDwResumed",
+                "type": "Until",
+                "dependsOn": [
+                    {
+                        "activity": "IfSqlDwPaused",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@equals('Online',string(activity('CheckSqlDwStatus').output.properties.status))",
+                        "type": "Expression"
+                    },
+                    "activities": [
+                        {
+                            "name": "CheckSqlDwStatus",
+                            "type": "WebActivity",
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false
+                            },
+                            "typeProperties": {
+                                "url": {
+                                    "value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'?api-version=2014-04-01')",
+                                    "type": "Expression"
+                                },
+                                "method": "GET",
+                                "authentication": {
+                                    "type": "MSI",
+                                    "resource": "https://management.core.windows.net/"
+                                }
+                            }
+                        }
+                    ],
+                    "timeout": "7.00:00:00"
+                }
+            }
+        ],
+        "parameters": {
+            "SubscriptionID": {
+                "type": "String",
+                "defaultValue": ""
+            },
+            "ResourceGroup": {
+                "type": "String",
+                "defaultValue": ""
+            },
+            "Server": {
+                "type": "String",
+                "defaultValue": ""
+            },
+            "DW": {
+                "type": "String",
+                "defaultValue": ""
+            }
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

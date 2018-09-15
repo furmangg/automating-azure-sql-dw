@@ -1,0 +1,51 @@
+{
+    "name": "BackupAzureSQLDW",
+    "properties": {
+        "activities": [
+            {
+                "name": "BackupDW",
+                "type": "WebActivity",
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false
+                },
+                "typeProperties": {
+                    "url": {
+                        "value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Sql/servers/',pipeline().parameters.Server,'/databases/',pipeline().parameters.DW,'/restorePoints?api-version=2017-03-01-preview')",
+                        "type": "Expression"
+                    },
+                    "method": "POST",
+                    "body": {
+                        "value": "@json(concat('{\"restorePointLabel\":\"',string(pipeline().TriggerTime),'\"}'))",
+                        "type": "Expression"
+                    },
+                    "authentication": {
+                        "type": "MSI",
+                        "resource": "https://management.core.windows.net/"
+                    }
+                }
+            }
+        ],
+        "parameters": {
+            "SubscriptionID": {
+                "type": "String",
+                "defaultValue": ""
+            },
+            "ResourceGroup": {
+                "type": "String",
+                "defaultValue": ""
+            },
+            "Server": {
+                "type": "String",
+                "defaultValue": ""
+            },
+            "DW": {
+                "type": "String",
+                "defaultValue": ""
+            }
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
