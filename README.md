@@ -5,7 +5,7 @@ My Ignite 2018 presentation entitled [Automating Azure SQL Data Warehouse](https
 
 #### BackupAzureSQLDW
 
-The ADFv2/BackupAzureSQLDW.json file contains an Azure Data Factory v2 pipeline which triggers a backup of your Azure SQL DW. In proper terms, this pipeline creates a [user-defined restore point](https://docs.microsoft.com/en-us/azure/sql-data-warehouse/backup-and-restore#user-defined-restore-points) in your DW. If you DW is paused through the day except for a few hours during the loads then it may not be online long enough to get an automatic restore point created. Furthermore, automatic restore points may happen in the middle of a load making them useless for a restore. Triggering a user-defined restore point ensures you backup the DW at a consistent point before or after a load.
+The [ADFv2/BackupAzureSQLDW.json](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/ADFv2/BackupAzureSQLDW.json) file contains an Azure Data Factory v2 pipeline which triggers a backup of your Azure SQL DW. In proper terms, this pipeline creates a [user-defined restore point](https://docs.microsoft.com/en-us/azure/sql-data-warehouse/backup-and-restore#user-defined-restore-points) in your DW. If you DW is paused through the day except for a few hours during the loads then it may not be online long enough to get an automatic restore point created. Furthermore, automatic restore points may happen in the middle of a load making them useless for a restore. Triggering a user-defined restore point ensures you backup the DW at a consistent point before or after a load.
 
 Set the following parameters upon execution of the pipeline:
 * **SubscriptionID** - The GUID identifier for the subscription the Azure SQL DW is running from. To get this ID, go to the Subscriptions tab of the Azure Portal.
@@ -20,7 +20,7 @@ This pipeline executes the command under your ADF Managed Service Identity (MSI)
 
 #### PauseAzureSQLDW
 
-The ADFv2/PauseAzureSQLDW.json file contains an Azure Data Factory v2 pipeline which pauses your DW and loops until the pause is complete. This pipeline immediately pauses your DW without checking whether any queries or loads are running.
+The [ADFv2/PauseAzureSQLDW.json](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/ADFv2/PauseAzureSQLDW.json) file contains an Azure Data Factory v2 pipeline which pauses your DW and loops until the pause is complete. This pipeline immediately pauses your DW without checking whether any queries or loads are running.
 
 Set the following parameters upon execution of the pipeline:
 * **SubscriptionID** - The GUID identifier for the subscription the Azure SQL DW is running from. To get this ID, go to the Subscriptions tab of the Azure Portal.
@@ -33,7 +33,7 @@ This pipeline executes the command under your ADF Managed Service Identity (MSI)
 
 #### ResumeAzureSQLDW
 
-The ADFv2/ResumeAzureSQLDW.json file contains an Azure Data Factory v2 pipeline which resumes (unpauses) your DW and loops until the DW is online. If the DW is already online then it does nothing.
+The [ADFv2/ResumeAzureSQLDW.json](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/ADFv2/ResumeAzureSQLDW.json) file contains an Azure Data Factory v2 pipeline which resumes (unpauses) your DW and loops until the DW is online. If the DW is already online then it does nothing.
 
 Set the following parameters upon execution of the pipeline:
 * **SubscriptionID** - The GUID identifier for the subscription the Azure SQL DW is running from. To get this ID, go to the Subscriptions tab of the Azure Portal.
@@ -44,3 +44,10 @@ Set the following parameters upon execution of the pipeline:
 This pipeline executes the command under your ADF Managed Service Identity (MSI). Thus that MSI must be granted proper permissions as explained in the instructions for BackupAzureSQLDW above.
 
 
+### [CLI](https://github.com/furmangg/automating-azure-sql-dw/tree/master/CLI)
+
+#### resumeDW.bat
+
+The [CLI/resumeDW.bat](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/CLI/resumeDW.bat) file is a batch script which calls the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) to resume (unpause) your DW and loop until the DW is online. If the DW is already online then it does nothing.
+
+The script as written is designed to run from within an Azure VM where the Managed Service Identity (MSI) has been [enabled](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/qs-configure-portal-windows-vm) and [granted](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal) Contributor permissions to the Azure SQL Server.
