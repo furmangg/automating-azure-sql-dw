@@ -78,23 +78,23 @@ The [AzureAutomation/RotateKeys.ps1](https://raw.githubusercontent.com/furmangg/
 
 Deploying this solution requires a number of steps:
 
-a. In your Azure Automation account, import the AzureRM.profile, AzureRM.AnalysisServices, AzureRM.KeyVault, and PackageManagement.
-b. Ensure the RunAs account is created and is a Contributor on the subscription (or at least the resource groups for Azure Key Vault, Azure SQL DW, Azure Analysis Services and Azure Blob Storage.)
-c. Create an Azure Key Vault and grant your ADF Managed Service Identity (MSI) permission to get secrets. (Azure Automation will grant its RunAs account permission to Azure Key Vault secrets.) Grant cube developers or other developers permissions to get secrets.
-d. Create a new secret called "dw-admin-password" and populate it with the SQL DW admin password.
-e. Create a new secret called "dw-AdfLoader-connectionstring" and populate it with a placeholder like the letter "x". The runbook will set this after key rotation runs the first time.
-f. Create a new secret called "dw-CubeReadOnly-password" and populate it with a placeholder like the letter "x". The runbook will set this after key rotation.
-g. Create a new secret called "storage-connection-string" and populate it with a placeholder like the letter "x". The runbook will set this after key rotation.
-h. Create a new SQL DW login called AdfLoader with db_owner permissions and then update the &lt;YourSqlDwLoginUsedInAdf&gt; token in the PowerShell script with its name.
-i. Create a new SQL DW login called CubeReadOnly with db_datareader permissions and then update the &lt;YourSqlDwLoginForAzureAS&gt; token in the PowerShell script with its name.
-j. Update the &lt;YourSqlDwAdminUsername&gt; token in the PowerShell script with the name of your SQL DW admin account.
-k. Create a new database scoped credential in Azure SQL DW called "credStorage" pointing at the Azure Blob Storage account. Create any additional Polybase objects like external data sources that reference that credential.
-l. Connect to Azure Analysis Services in SSMS and right click on the server node and choose Properties and on the Security tab. Click Add to add a new admin user. Search for the name of your Azure Automation Account in order to find the RunAs account and add this identity.
-m. Deploy your Azure Analysis Services model using the CubeReadOnly account.
-n. Create a new lsAzureKeyVault linked service in Azure Data Factory pointing to Azure Key Vault.
-o. Create a new linked service in Azure Data Factory pointing to Azure SQL DW but have it get the connection string from the "dw-AdfLoader-connectionstring" secret in lsAzureKeyVault.
-p. Create a new linked service in Azure Data Factory pointing to Azure Blob Storage but have it get the connection string from the "storage-connection-string" secret in lsAzureKeyVault.
-q. In the Azure Automation pane for the RotateKeys runbook click the Schedule button, setup a schedule such as every Sunday morning, then set the parameters as follows.
+1. In your Azure Automation account, import the AzureRM.profile, AzureRM.AnalysisServices, AzureRM.KeyVault, and PackageManagement.
+1. Ensure the RunAs account is created and is a Contributor on the subscription (or at least the resource groups for Azure Key Vault, Azure SQL DW, Azure Analysis Services and Azure Blob Storage.)
+1. Create an Azure Key Vault and grant your ADF Managed Service Identity (MSI) permission to get secrets. (Azure Automation will grant its RunAs account permission to Azure Key Vault secrets.) Grant cube developers or other developers permissions to get secrets.
+1. Create a new secret called "dw-admin-password" and populate it with the SQL DW admin password.
+1. Create a new secret called "dw-AdfLoader-connectionstring" and populate it with a placeholder like the letter "x". The runbook will set this after key rotation runs the first time.
+1. Create a new secret called "dw-CubeReadOnly-password" and populate it with a placeholder like the letter "x". The runbook will set this after key rotation.
+1. Create a new secret called "storage-connection-string" and populate it with a placeholder like the letter "x". The runbook will set this after key rotation.
+1. Create a new SQL DW login called AdfLoader with db_owner permissions and then update the &lt;YourSqlDwLoginUsedInAdf&gt; token in the PowerShell script with its name.
+1. Create a new SQL DW login called CubeReadOnly with db_datareader permissions and then update the &lt;YourSqlDwLoginForAzureAS&gt; token in the PowerShell script with its name.
+1. Update the &lt;YourSqlDwAdminUsername&gt; token in the PowerShell script with the name of your SQL DW admin account.
+1. Create a new database scoped credential in Azure SQL DW called "credStorage" pointing at the Azure Blob Storage account. Create any additional Polybase objects like external data sources that reference that credential.
+1. Connect to Azure Analysis Services in SSMS and right click on the server node and choose Properties and on the Security tab. Click Add to add a new admin user. Search for the name of your Azure Automation Account in order to find the RunAs account and add this identity.
+1. Deploy your Azure Analysis Services model using the CubeReadOnly account.
+1. Create a new lsAzureKeyVault linked service in Azure Data Factory pointing to Azure Key Vault.
+1. Create a new linked service in Azure Data Factory pointing to Azure SQL DW but have it get the connection string from the "dw-AdfLoader-connectionstring" secret in lsAzureKeyVault.
+1. Create a new linked service in Azure Data Factory pointing to Azure Blob Storage but have it get the connection string from the "storage-connection-string" secret in lsAzureKeyVault.
+1. In the Azure Automation pane for the RotateKeys runbook click the Schedule button, setup a schedule such as every Sunday morning, then set the parameters as follows.
 
 The runbook has the following parameters:
 * **StorageAccountName** - The name of your storage account which will have its keys rotated, the new key updated in Azure SQL DW in the database scoped credential, and the key updated in the Azure Key Vault secret which Azure Automation uses.
