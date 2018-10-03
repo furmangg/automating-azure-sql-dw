@@ -1,5 +1,9 @@
 # Automating Azure SQL DW - Code Samples
-My Ignite 2018 presentation entitled [Automating Azure SQL Data Warehouse](https://myignite.techcommunity.microsoft.com/sessions/66195?source=sessions) on September 26, 2018 included demos of various ways to automate Azure SQL DW. These code samples are included here.
+My Ignite 2018 presentation entitled [Automating Azure SQL Data Warehouse](https://myignite.techcommunity.microsoft.com/sessions/66195?source=sessions) (download [slides](images/THR2192%20-%20Automating%20Azure%20SQL%20DW.pptx)) on September 26, 2018 included demos of various ways to automate Azure SQL DW. These code samples are included here.
+
+##### Screencast Video Recording:
+
+[![Screencast recording of Ignite presentation](http://img.youtube.com/vi/wbZm4RplfVo/0.jpg)](http://www.youtube.com/watch?v=wbZm4RplfVo)
 
 ### [ADFv2](https://github.com/furmangg/automating-azure-sql-dw/tree/master/ADFv2)
 
