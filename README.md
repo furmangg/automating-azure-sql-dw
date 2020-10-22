@@ -63,7 +63,7 @@ Set the following parameters upon execution of the pipeline:
 
 This pipeline executes the command under your ADF Managed Service Identity (MSI). Thus that MSI must be granted proper permissions as explained in the instructions for BackupAzureSQLDW above. The MSI must also have db_owner permission in the DW.
 
-This pipeline depends on the [lsDW](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/ADFv2/lsDW.json) linked service and the [ds_sqldw_generic](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/ADFv2/dw_sqldw_generic.json) dataset to enable the Lookup activity to check whether queries are running.
+This pipeline depends on the [lsDW](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/ADFv2/lsDW.json) linked service and the [ds_sqldw_generic](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/ADFv2/ds_sqldw_generic.json) dataset to enable the Lookup activity to check whether queries are running.
 
 <br/><br/>
 
