@@ -1,0 +1,25 @@
+{
+    "name": "lsDW",
+    "type": "Microsoft.Synapse/workspaces/linkedservices",
+    "properties": {
+        "parameters": {
+            "databaseName": {
+                "type": "string",
+                "defaultValue": "YourDW"
+            },
+            "serverName": {
+                "type": "string",
+                "defaultValue": "yourservergoeshere.database.windows.net"
+            }
+        },
+        "annotations": [],
+        "type": "AzureSqlDW",
+        "typeProperties": {
+            "connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().serverName};Initial Catalog=@{linkedService().databaseName}"
+        },
+        "connectVia": {
+            "referenceName": "AutoResolveIntegrationRuntime",
+            "type": "IntegrationRuntimeReference"
+        }
+    }
+}

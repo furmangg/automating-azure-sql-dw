@@ -1,0 +1,12 @@
+{
+    "name": "ds_sqldw_generic",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "lsDW",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "AzureSqlDWTable",
+        "schema": []
+    }
+}

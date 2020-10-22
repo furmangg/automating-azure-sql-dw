@@ -1,4 +1,4 @@
-# Automating Azure SQL DW - Code Samples
+# Automating Azure Synapse Analytics (formerly Azure SQL DW) - Code Samples
 My Ignite 2018 presentation entitled [Automating Azure SQL Data Warehouse](https://myignite.techcommunity.microsoft.com/sessions/66195?source=sessions) (download [slides](https://github.com/furmangg/automating-azure-sql-dw/raw/master/images/THR2192%20-%20Automating%20Azure%20SQL%20DW.pptx)) on September 26, 2018 included demos of various ways to automate Azure SQL DW. These code samples are included here.
 
 ##### Screencast Video Recording:
@@ -7,6 +7,8 @@ My Ignite 2018 presentation entitled [Automating Azure SQL Data Warehouse](https
 
 
 ### [ADFv2](https://github.com/furmangg/automating-azure-sql-dw/tree/master/ADFv2)
+
+These ADF pipelines will likely not work against a SQL Pool running in an Azure Synapse Analytics workspace (preview) but do work against "Azure Synapse Analytics (formerly Azure SQL DW)". Stay tuned for subsequent updates which support Synapse workspaces.
 
 #### BackupAzureSQLDW
 
@@ -48,9 +50,28 @@ Set the following parameters upon execution of the pipeline:
 
 This pipeline executes the command under your ADF Managed Service Identity (MSI). Thus that MSI must be granted proper permissions as explained in the instructions for BackupAzureSQLDW above.
 
+
+#### PauseAzureSQLDWIfNoQueriesRunning
+
+The [ADFv2/PauseAzureSQLDWIfNoQueriesRunning.json](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/ADFv2/PauseAzureSQLDWIfNoQueriesRunning.json) file contains an Azure Data Factory v2 pipeline which pauses your DW and loops until the pause is complete. This pipeline only pauses your DW if no queries or loads are running.
+
+Set the following parameters upon execution of the pipeline:
+* **SubscriptionID** - The GUID identifier for the subscription the Azure SQL DW is running from. To get this ID, go to the Subscriptions tab of the Azure Portal.
+* **ResourceGroup** - The name of the resource group where the Azure SQL DW lives.
+* **Server** - The name of your Azure SQL DW server. This is not the full _yourdwserver.database.windows.net_ server name. This is just the initial _yourdwserver_ section.
+* **DW** - The name of the DW database.
+
+This pipeline executes the command under your ADF Managed Service Identity (MSI). Thus that MSI must be granted proper permissions as explained in the instructions for BackupAzureSQLDW above. The MSI must also have db_owner permission in the DW.
+
+This pipeline depends on the [lsDW](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/ADFv2/lsDW.json) linked service and the [ds_sqldw_generic](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/ADFv2/dw_sqldw_generic.json) dataset to enable the Lookup activity to check whether queries are running.
+
 <br/><br/>
 
+
+
 ### [CLI](https://github.com/furmangg/automating-azure-sql-dw/tree/master/CLI)
+
+This CLI script will likely not work against a SQL Pool running in an Azure Synapse Analytics workspace (preview) but do work against "Azure Synapse Analytics (formerly Azure SQL DW)". Stay tuned for subsequent updates which support Synapse workspaces.
 
 #### resumeDW.bat
 
@@ -61,6 +82,8 @@ The script as written is designed to run from within an Azure VM where the Manag
 <br/><br/>
 
 ### [Azure Automation](https://github.com/furmangg/automating-azure-sql-dw/tree/master/AzureAutomation)
+
+This Azure Automation runbook will likely not work against a SQL Pool running in an Azure Synapse Analytics workspace (preview) but do work against "Azure Synapse Analytics (formerly Azure SQL DW)". Stay tuned for subsequent updates which support Synapse workspaces.
 
 #### RotateKeys.ps1
 
@@ -112,6 +135,16 @@ The runbook has the following parameters:
 * **AzureASResourceGroupName** - The name of the resource group where your Azure Analysis Services lives.
 
 <br/><br/>
+
+
+### [SQL](https://github.com/furmangg/automating-azure-sql-dw/tree/master/SQL)
+
+#### scale to new DWU and loop until it completes.sql
+
+The [SQL/scale to new DWU and loop until it completes.bat](https://raw.githubusercontent.com/furmangg/automating-azure-sql-dw/master/SQL/scale%20to%20new%20DWU%20and%20loop%20until%20it%20completes.sql) file SQL script you can run against the master database on the server containing your Azure SQL DW. It assumes there's only one DW on that server and it assumes that the user running it is a server admin or has been granted dbmanager role (as mentioned at the top of the script in comments)
+
+<br/><br/>
+
 
 ### Questions or Issues
 
