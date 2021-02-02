@@ -45,3 +45,7 @@ $Date=Get-Date
 $Label = $SqlDwDatabaseName + "_Backup_" + $Date
 
 New-AzureRMSqlDatabaseRestorePoint -ResourceGroupName $SqlDwResourceGroupName -ServerName $SqlDwServerName -DatabaseName $SqlDwDatabaseName -RestorePointLabel $Label
+
+"Successfully created a User Defined Restore Point $Label"
+
+
