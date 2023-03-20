@@ -13,38 +13,22 @@ param(
 
 
 
-$connectionName = "AzureRunAsConnection"
 try
 {
-    # Get the connection "AzureRunAsConnection "
-    $servicePrincipalConnection=Get-AutomationConnection -Name $connectionName         
-
     "Logging in to Azure..."
-    Add-AzureRmAccount `
-        -ServicePrincipal `
-        -TenantId $servicePrincipalConnection.TenantId `
-        -ApplicationId $servicePrincipalConnection.ApplicationId `
-        -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint 
+    Connect-AzAccount -Identity
 }
 catch {
-    if (!$servicePrincipalConnection)
-    {
-        $ErrorMessage = "Connection $connectionName not found."
-        throw $ErrorMessage
-    } else{
-        Write-Error -Message $_.Exception
-        throw $_.Exception
-    }
+    Write-Error -Message $_.Exception
+    throw $_.Exception
 }
-$ErrorActionPreference = "Stop";
-
 
 
 
 $Date=Get-Date 
 $Label = $SqlDwDatabaseName + "_Backup_" + $Date
 
-New-AzureRMSqlDatabaseRestorePoint -ResourceGroupName $SqlDwResourceGroupName -ServerName $SqlDwServerName -DatabaseName $SqlDwDatabaseName -RestorePointLabel $Label
+New-AzSqlDatabaseRestorePoint -ResourceGroupName $SqlDwResourceGroupName -ServerName $SqlDwServerName -DatabaseName $SqlDwDatabaseName -RestorePointLabel $Label
 
 "Successfully created a User Defined Restore Point $Label"
 
