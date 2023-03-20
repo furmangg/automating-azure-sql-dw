@@ -23,6 +23,7 @@ catch {
     throw $_.Exception
 }
 
+$ErrorActionPreference = "Stop";
 
 # Get old status 
 $OldDbSetting = Get-AzSqlDatabase -DatabaseName $SqlDwDatabaseName -ServerName $SqlDwServerName -ResourceGroupName $SqlDwResourceGroupName
