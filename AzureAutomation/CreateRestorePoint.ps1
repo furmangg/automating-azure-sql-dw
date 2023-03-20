@@ -23,7 +23,7 @@ catch {
     throw $_.Exception
 }
 
-
+$ErrorActionPreference = "Stop";
 
 $Date=Get-Date 
 $Label = $SqlDwDatabaseName + "_Backup_" + $Date
